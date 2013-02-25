@@ -31,7 +31,35 @@ namespace GitStatistics
 				var commitDate = commit.Committer.When.Date;
 				var data = RawStatistics.ContainsKey(commitDate) ? RawStatistics[commitDate] : new DatePoint();
 
+				// Create a committer instance based on the commit
+				var committer = new Committer {
+					Email = commit.Committer.Email,
+					NumberOfCommits = 1
+				};
 
+				// What type of commit are we dealing with?
+				switch (commit.ParentsCount)
+				{
+					// Root commit
+					case 0:
+						// TODO: Count lines manually
+						break;
+
+					// Normal commit
+					case 1:
+						var diff = repo.Diff.Compare(commit.Parents.First().Tree, commit.Tree);
+
+						committer.TotalLinesAdded = diff.LinesAdded;
+						committer.TotalLinesDeleted = diff.LinesDeleted;
+						break;
+
+					// Merge commit
+					default:
+						break;
+				}
+
+				// Add this committers data to the aggregated total
+				data.AddOrUpdateCommitter(committer);
 
 				// Update or store DatePoint
 				RawStatistics[commitDate] = data;

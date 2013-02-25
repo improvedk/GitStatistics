@@ -5,7 +5,12 @@ namespace GitStatistics
 {
 	public class DatePoint
 	{
-		public IEnumerable<Committer> Committers { get; private set; }
+		private readonly Dictionary<string, Committer> committers = new Dictionary<string, Committer>();
+
+		public IEnumerable<Committer> Committers
+		{
+			get { return committers.Values; }
+		}
 
 		public int NumberOfCommits
 		{
@@ -42,9 +47,26 @@ namespace GitStatistics
 			get { return (double)TotalLinesModified / NumberOfCommits; }
 		}
 
+		/// <summary>
+		/// No public instantiations please
+		/// </summary>
 		internal DatePoint()
+		{ }
+
+		/// <summary>
+		/// Either adds or updates an existing committers total statistics
+		/// </summary>
+		internal void AddOrUpdateCommitter(Committer committer)
 		{
-			Committers = new List<Committer>();
+			if (committers.ContainsKey(committer.Email))
+			{
+				var existingCommitter = committers[committer.Email];
+				existingCommitter.NumberOfCommits += committer.NumberOfCommits;
+				existingCommitter.TotalLinesAdded += committer.TotalLinesAdded;
+				existingCommitter.TotalLinesDeleted += committer.TotalLinesDeleted;
+			}
+			else
+				committers[committer.Email] = committer;
 		}
 	}
 }

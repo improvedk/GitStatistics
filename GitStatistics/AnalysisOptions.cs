@@ -9,13 +9,13 @@ namespace GitStatistics
 	{
 		public DateTime From { get; set; }
 		public DateTime To { get; set; }
-		public bool IgnoreMerges { get; set; }
+		public bool IgnoreMergeCommits { get; set; }
 
 		public AnalysisOptions()
 		{
-			From = DateTime.MinValue;
-			To = DateTime.MaxValue;
-			IgnoreMerges = true;
+			From = new DateTime(1000, 1, 1);
+			To = new DateTime(3000, 1, 1);
+			IgnoreMergeCommits = true;
 		}
 	}
 }
