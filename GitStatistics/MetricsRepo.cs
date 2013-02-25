@@ -17,17 +17,24 @@ namespace GitStatistics
 		/// <summary>
 		/// Can only be instantiated through the Analyze methods. Performs complete analysis in the constructor.
 		/// </summary>
-		private StatisticsRepo(string repoPath, DateTime from, DateTime to)
+		private StatisticsRepo(string repoPath, AnalysisOptions options)
 		{
 			RawStatistics = new SortedDictionary<DateTime, DatePoint>();
 			repo = new Repository(repoPath);
 			
 			// Commits within the specified date range
-			var commits = repo.Commits.Where(x => x.Author.When >= from && x.Author.When <= to);
+			var commits = repo.Commits.Where(x => x.Author.When >= options.From && x.Author.When <= options.To);
 
 			foreach (var commit in commits)
 			{
-				
+				// Get the date and a corresponding DatePoint, either new or existing
+				var commitDate = commit.Committer.When.Date;
+				var data = RawStatistics.ContainsKey(commitDate) ? RawStatistics[commitDate] : new DatePoint();
+
+
+
+				// Update or store DatePoint
+				RawStatistics[commitDate] = data;
 			}
 		}
 
@@ -35,9 +42,9 @@ namespace GitStatistics
 		/// Analyzes commits of a repository between from and to.
 		/// </summary>
 		/// <param name="path">Path of the repository to be analyzed.</param>
-		public static StatisticsRepo Analyze(string path, DateTime from, DateTime to)
+		public static StatisticsRepo Analyze(string path, AnalysisOptions options)
 		{
-			return new StatisticsRepo(path, from, to);
+			return new StatisticsRepo(path, options);
 		}
 
 		/// <summary>
@@ -46,7 +53,7 @@ namespace GitStatistics
 		/// <param name="path">Path of the repository to be analyzed.</param>
 		public static StatisticsRepo Analyze(string path)
 		{
-			return Analyze(path, DateTime.MinValue, DateTime.MaxValue);
+			return new StatisticsRepo(path, new AnalysisOptions());
 		}
 
 		public void Dispose()
