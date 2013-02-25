@@ -7,8 +7,8 @@
     <ProjectGuid>{0FCE2562-3EA1-49F5-845E-6C921408D911}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GitMetrics.Adhoc</RootNamespace>
-    <AssemblyName>GitMetrics.Adhoc</AssemblyName>
+    <RootNamespace>GitStatistics.Adhoc</RootNamespace>
+    <AssemblyName>GitStatistics.Adhoc</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -48,9 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GitMetrics\GitMetrics.csproj">
+    <ProjectReference Include="..\GitStatistics\GitStatistics.csproj">
       <Project>{d6f0075e-0fac-451e-93d2-327a62f8d080}</Project>
-      <Name>GitMetrics</Name>
+      <Name>GitStatistics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitMetrics.Adhoc
+namespace GitStatistics.Adhoc
 {
 	class Program
 	{
@@ -8,7 +8,7 @@ namespace GitMetrics.Adhoc
 
 		static void Main()
 		{
-			var repo = MetricsRepo.Analyze(repoPath);
+			var repo = StatisticsRepo.Analyze(repoPath);
 			
 
 			Console.WriteLine("Done");

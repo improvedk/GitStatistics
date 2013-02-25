@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace GitMetrics
+namespace GitStatistics
 {
-	public class DateMetric
+	public class DatePoint
 	{
 		public IEnumerable<Author> Authors { get; private set; }
 		public IEnumerable<Committer> Committers { get; private set; }
@@ -30,7 +30,7 @@ namespace GitMetrics
 			get { return (double)TotalLinesModified / NumberOfCommits; }
 		}
 
-		internal DateMetric()
+		internal DatePoint()
 		{
 			Authors = new List<Author>();
 			Committers = new List<Committer>();

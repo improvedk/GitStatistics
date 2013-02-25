@@ -1,4 +1,4 @@
-﻿namespace GitMetrics
+﻿namespace GitStatistics
 {
 	public class Committer : Author
 	{ }
