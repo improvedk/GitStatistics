@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnalysisOptions.cs" />
-    <Compile Include="Author.cs" />
     <Compile Include="Committer.cs" />
     <Compile Include="DatePoint.cs" />
     <Compile Include="MetricsRepo.cs" />

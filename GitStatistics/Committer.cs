@@ -1,5 +1,9 @@
 ﻿namespace GitStatistics
 {
-	public class Committer : Author
-	{ }
+	public class Committer
+	{
+		public int NumberOfCommits { get; internal set; }
+		public int TotalLinesAdded { get; internal set; }
+		public int TotalLinesDeleted { get; internal set; }
+	}
 }
