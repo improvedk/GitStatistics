@@ -47,7 +47,7 @@
     <Compile Include="AnalysisOptions.cs" />
     <Compile Include="Committer.cs" />
     <Compile Include="DatePoint.cs" />
-    <Compile Include="MetricsRepo.cs" />
+    <Compile Include="StatisticsRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

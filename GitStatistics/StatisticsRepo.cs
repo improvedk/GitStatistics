@@ -42,6 +42,9 @@ namespace GitStatistics
 				{
 					// Root commit
 					case 0:
+						if (options.IgnoreFirstCommit)
+							continue;
+
 						// TODO: Count lines manually
 						break;
 
@@ -55,6 +58,10 @@ namespace GitStatistics
 
 					// Merge commit
 					default:
+						if (options.IgnoreMergeCommits)
+							continue;
+
+						// TODO: Diff according to both parents
 						break;
 				}
 
