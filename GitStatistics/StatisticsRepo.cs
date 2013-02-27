@@ -30,6 +30,7 @@ namespace GitStatistics
 				// Get the date and a corresponding DatePoint, either new or existing
 				var commitDate = commit.Committer.When.Date;
 				var data = RawStatistics.ContainsKey(commitDate) ? RawStatistics[commitDate] : new DatePoint();
+				data.Date = commitDate;
 
 				// Create a committer instance based on the commit
 				var committer = new Committer {
@@ -38,6 +39,8 @@ namespace GitStatistics
 				};
 
 				// What type of commit are we dealing with?
+				TreeChanges diff;
+
 				switch (commit.ParentsCount)
 				{
 					// Root commit
@@ -45,13 +48,53 @@ namespace GitStatistics
 						if (options.IgnoreFirstCommit)
 							continue;
 
-						// TODO: Count lines manually
+						// Queue to hold child trees and files that we need to process
+						var entries = new Queue<TreeEntry>();
+
+						// Queue up first level entries
+						foreach (var entry in commit.Tree)
+							entries.Enqueue(entry);
+							
+						// Loop until we've processed everything
+						while (entries.Count > 0)
+						{
+							var entry = entries.Dequeue();
+
+							switch (entry.Type)
+							{
+								// For trees we'll queue up all children
+								case GitObjectType.Tree:
+									var tree = (Tree)entry.Target;
+
+									foreach (var child in tree)
+										entries.Enqueue(child);
+									break;
+
+								// For files we'll count the lines
+								case GitObjectType.Blob:
+									var blob = (Blob)entry.Target;
+
+									// There are probably better ways of detecting binary files, but for now we'll use the same
+									// hack as libgit and just detect if any \0 bytes are present.
+									if (blob.Content.Contains((byte)0x0))
+									{
+										// For now we'll just ignore binary files
+									}
+									else
+									{
+										// For text files we'll define a linebreak as being = \n
+										// TODO: Detect actual encoding rather than assuming it's UTF-8
+										committer.TotalLinesAdded += blob.ContentAsUtf8().Split('\n').Length;
+									}
+									break;
+							}
+						}
 						break;
 
 					// Normal commit
 					case 1:
-						var diff = repo.Diff.Compare(commit.Parents.First().Tree, commit.Tree);
-
+						// Diff parent and note changes
+						diff = repo.Diff.Compare(commit.Parents.First().Tree, commit.Tree);
 						committer.TotalLinesAdded = diff.LinesAdded;
 						committer.TotalLinesDeleted = diff.LinesDeleted;
 						break;
@@ -61,7 +104,13 @@ namespace GitStatistics
 						if (options.IgnoreMergeCommits)
 							continue;
 
-						// TODO: Diff according to both parents
+						// Diff each parent and sum up changes
+						foreach (var parent in commit.Parents)
+						{
+							diff = repo.Diff.Compare(parent.Tree, commit.Tree);
+							committer.TotalLinesAdded += diff.LinesAdded;
+							committer.TotalLinesDeleted += diff.LinesDeleted;
+						}
 						break;
 				}
 

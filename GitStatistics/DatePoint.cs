@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace GitStatistics
@@ -11,6 +12,8 @@ namespace GitStatistics
 		{
 			get { return committers.Values; }
 		}
+
+		public DateTime Date { get; internal set; }
 
 		public int NumberOfCommits
 		{
